@@ -35,6 +35,12 @@ class ViewDecks extends Component {
     const { decks, navigation } = this.props;
     const { opacity } = this.state;
 
+    if (Object.keys(decks).length === 0) {
+      <View>
+        <Text>No decks available</Text>
+      </View>;
+    }
+
     return (
       <ScrollView style={{ flex: 1 }}>
         {decks ? (

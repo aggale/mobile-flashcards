@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
   View,
-  TouchableOpacity,
+  Button,
   Text,
   TextInput,
   KeyboardAvoidingView,
@@ -51,9 +51,7 @@ class AddCard extends Component {
           value={answer}
           onChange={this.handleAnswerChange}
         />
-        <TouchableOpacity onPress={this.submit}>
-          <Text>Create</Text>
-        </TouchableOpacity>
+        <Button title="Create" onPress={this.submit}></Button>
       </KeyboardAvoidingView>
     );
   }

@@ -10,6 +10,7 @@ import {
 import DeckDescription from "./DeckDescription";
 import { connect } from "react-redux";
 import { restartQuiz } from "../actions/currentGame";
+import { clearLocalNotification, setLocalNotification } from "../helpers";
 
 class QuizResults extends Component {
   restartQuiz = () => {
@@ -27,9 +28,13 @@ class QuizResults extends Component {
     });
   };
 
+  componentDidMount() {
+    clearLocalNotification().then(setLocalNotification);
+  }
+
   render() {
     const { correct } = this.props;
-    console.log("render");
+
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Text style={{ paddingBottom: 30 }}>{`You got ${correct} right!`}</Text>
@@ -41,7 +46,6 @@ class QuizResults extends Component {
 }
 
 function mapStateToProps({ currentGame }) {
-  console.log(currentGame);
   return {
     deckName: currentGame.name,
     correct: currentGame.correctAnswers

@@ -25,8 +25,9 @@ class Quiz extends Component {
 
     dispatch(answerQuestion(correct));
 
+    this.setState({ showAnswer: false });
+
     if (currentQuestion < totalQuestions) {
-      console.log(currentQuestion, totalQuestions);
       this.props.navigation.navigate("Quiz");
     } else {
       this.props.navigation.navigate("QuizResults");
@@ -36,6 +37,14 @@ class Quiz extends Component {
   render() {
     const { question, answer, currentQuestion, totalQuestions } = this.props;
     const { showAnswer } = this.state;
+
+    if (totalQuestions === 0) {
+      return (
+        <View>
+          <Text>No questions available. Please add cards and try again.</Text>
+        </View>
+      );
+    }
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -66,13 +75,14 @@ class Quiz extends Component {
 }
 
 function mapStateToProps({ decks, currentGame }) {
-  console.log("again");
   const card = decks[currentGame.name].cards[currentGame.currentQuestion - 1];
   return {
     question: card ? card.question : "",
     answer: card ? card.answer : "",
     currentQuestion: currentGame.currentQuestion,
-    totalQuestions: decks[currentGame.name].cards.length
+    totalQuestions: decks[currentGame.name]
+      ? decks[currentGame.name].cards.length
+      : 0
   };
 }
 

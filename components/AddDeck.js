@@ -21,7 +21,7 @@ class AddDeck extends Component {
 
   submit = () => {
     const name = this.state.titleInput;
-    console.log("submit");
+
     this.props.dispatch(handleAddDeck(name));
     this.setState({ titleInput: "" });
     this.props.navigation.navigate("ViewDeck", {

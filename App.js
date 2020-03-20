@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { Text, View, Platform, StatusBar } from "react-native";
 import AddDeck from "./components/AddDeck";
 import AddCard from "./components/AddCard";
@@ -16,6 +16,7 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./reducers";
 import middleware from "./middleware";
+import { setLocalNotification } from "./helpers";
 
 // Structure for v5 from https://thefinnternet.com/react-native-navigation-v5/
 enableScreens();
@@ -59,13 +60,19 @@ const DeckNavigator = () => (
   </Stack.Navigator>
 );
 
-export default function App() {
-  return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <DeckStatusBar />
-        <TabNavigator />
-      </NavigationContainer>
-    </Provider>
-  );
+export default class App extends Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <NavigationContainer>
+          <DeckStatusBar />
+          <TabNavigator />
+        </NavigationContainer>
+      </Provider>
+    );
+  }
 }

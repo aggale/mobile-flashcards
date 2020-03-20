@@ -40,11 +40,10 @@ class ViewDeck extends Component {
 
 function mapStateToProps({ decks }, { route }) {
   const name = route.params.name;
-  console.log(name);
-  console.log("Cards", decks[name]);
+
   return {
     name,
-    nCards: decks[name].cards.length
+    nCards: decks[name] ? decks[name].cards.length : 0
   };
 }
 
