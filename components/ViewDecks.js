@@ -1,10 +1,30 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+  Animated
+} from "react-native";
 import { connect } from "react-redux";
 import { handleInitializeDecks } from "../actions/decks";
 import DeckDescription from "./DeckDescription";
 
 class ViewDecks extends Component {
+  state = {
+    opacity: new Animated.Value(1)
+  };
+
+  viewIndividualDeck = deck => {
+    const { opacity } = this.state;
+    const { navigation } = this.props;
+
+    Animated.timing(opacity, { duration: 200, toValue: 0.7 }).start();
+    navigation.navigate("ViewDeck", {
+      name: deck.name
+    });
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
 
@@ -13,6 +33,7 @@ class ViewDecks extends Component {
 
   render() {
     const { decks, navigation } = this.props;
+    const { opacity } = this.state;
 
     return (
       <ScrollView style={{ flex: 1 }}>
@@ -22,13 +43,11 @@ class ViewDecks extends Component {
             return (
               <TouchableOpacity
                 key={deck.name}
-                onPress={() =>
-                  navigation.navigate("ViewDeck", {
-                    name: deck.name
-                  })
-                }
+                onPress={() => this.viewIndividualDeck(deck)}
+                style={{ margin: 20 }}
               >
-                <DeckDescription name={deck.name} nCards={deck.cards.length} />
+                <Animated.Text style={{ opacity }}>{name}</Animated.Text>
+                <Text>{`${deck.cards.length} cards`}</Text>
               </TouchableOpacity>
             );
           })
