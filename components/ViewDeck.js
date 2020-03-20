@@ -8,26 +8,44 @@ import {
   Button
 } from "react-native";
 import DeckDescription from "./DeckDescription";
+import { connect } from "react-redux";
+import { startGame } from "../actions/currentGame";
 
-export default class ViewDeck extends Component {
+class ViewDeck extends Component {
   handleAddCard = () => {
-    console.log("Add card");
+    const { name } = this.props;
+    this.props.navigation.navigate("AddCard", {
+      deckName: name
+    });
   };
 
   handleStartQuiz = () => {
-    console.log("Start quiz");
+    const { dispatch, name } = this.props;
+
+    dispatch(startGame(name));
+    this.props.navigation.navigate("Quiz");
   };
 
   render() {
+    const { name, nCards } = this.props;
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <DeckDescription
-          name={this.props.card.name}
-          nCards={this.props.card.nCards}
-        />
+        <DeckDescription name={name} nCards={nCards} />
         <Button title="Add Card" onPress={this.handleAddCard} />
         <Button title="Start Quiz" onPress={this.handleStartQuiz} />
       </View>
     );
   }
 }
+
+function mapStateToProps({ decks }, { route }) {
+  const name = route.params.name;
+  console.log(name);
+  console.log("Cards", decks[name]);
+  return {
+    name,
+    nCards: decks[name].cards.length
+  };
+}
+
+export default connect(mapStateToProps)(ViewDeck);

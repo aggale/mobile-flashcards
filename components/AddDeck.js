@@ -7,8 +7,10 @@ import {
   TextInput,
   KeyboardAvoidingView
 } from "react-native";
+import { connect } from "react-redux";
+import { handleAddDeck } from "../actions/decks";
 
-export default class AddDeck extends Component {
+class AddDeck extends Component {
   state = {
     titleInput: ""
   };
@@ -18,7 +20,13 @@ export default class AddDeck extends Component {
   };
 
   submit = () => {
-    console.log(this.state.titleInput);
+    const name = this.state.titleInput;
+    console.log("submit");
+    this.props.dispatch(handleAddDeck(name));
+    this.setState({ titleInput: "" });
+    this.props.navigation.navigate("ViewDeck", {
+      name: name
+    });
   };
 
   render() {
@@ -38,6 +46,8 @@ export default class AddDeck extends Component {
     );
   }
 }
+
+export default connect()(AddDeck);
 
 const styles = StyleSheet.create({
   container: {

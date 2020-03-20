@@ -4,10 +4,13 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  StyleSheet
 } from "react-native";
+import { handleAddCard } from "../actions/decks";
+import { connect } from "react-redux";
 
-export default class AddCard extends Component {
+class AddCard extends Component {
   state = {
     question: "",
     answer: ""
@@ -22,14 +25,22 @@ export default class AddCard extends Component {
   };
 
   submit = () => {
-    console.log(this.state);
+    const { dispatch, navigation } = this.props;
+    const { deckName } = this.props.route.params;
+    const { question, answer } = this.state;
+
+    dispatch(handleAddCard(deckName, question, answer));
+    this.setState({ question: "", answer: "" });
+    navigation.navigate("ViewDeck", {
+      name: deckName
+    });
   };
 
   render() {
     const { question, answer } = this.state;
 
     return (
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <TextInput
           placeholder="Question"
           value={question}
@@ -47,3 +58,14 @@ export default class AddCard extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
+
+export default connect()(AddCard);

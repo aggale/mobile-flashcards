@@ -1,33 +1,49 @@
 import React, { Component } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  KeyboardAvoidingView
-} from "react-native";
+import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import { connect } from "react-redux";
+import { handleInitializeDecks } from "../actions/decks";
 import DeckDescription from "./DeckDescription";
 
-export default class ViewDeck extends Component {
-  viewDeck = e => {
-    console.log(e.nativeEvent);
-  };
+class ViewDecks extends Component {
+  componentDidMount() {
+    const { dispatch } = this.props;
+
+    dispatch(handleInitializeDecks());
+  }
 
   render() {
-    const cards = [{ name: "Deck1", nCards: 4 }, { name: "Deck2", nCards: 1 }];
+    const { decks, navigation } = this.props;
+
     return (
-      <View style={{ flex: 1 }}>
-        {cards.map(card => (
-          <TouchableOpacity
-            key={card.name}
-            onPress={e => {
-              this.viewDeck(card);
-            }}
-          >
-            <DeckDescription name={card.name} nCards={card.nCards} />
-          </TouchableOpacity>
-        ))}
-      </View>
+      <ScrollView style={{ flex: 1 }}>
+        {decks ? (
+          Object.keys(decks).map(name => {
+            const deck = decks[name];
+            return (
+              <TouchableOpacity
+                key={deck.name}
+                onPress={() =>
+                  navigation.navigate("ViewDeck", {
+                    name: deck.name
+                  })
+                }
+              >
+                <DeckDescription name={deck.name} nCards={deck.cards.length} />
+              </TouchableOpacity>
+            );
+          })
+        ) : (
+          <Text>No decks available</Text>
+        )}
+      </ScrollView>
     );
   }
 }
+
+function mapStateToProps({ decks }) {
+  return {
+    decks
+  };
+}
+
+export default connect(mapStateToProps)(ViewDecks);
